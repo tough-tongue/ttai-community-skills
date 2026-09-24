@@ -21,6 +21,7 @@ any agent that supports the [Agent Skills](https://agentskills.io) format.
 |---|---|---|---|
 | [pm-scenario-builder](skills/pm-scenario-builder) | "Turn this PM case into a scenario", "PM mock interview for…" | Classifies a PM interview case (Design, Strategy, Analytical, Execution, Technical, Behavioral), writes a full reference solution, and creates a candidate-led AI interviewer with a study guide and hire/no-hire rubric. | ttai MCP |
 | [case-interview-builder](skills/case-interview-builder) | "Turn Case 7 into a mock case interview" | Builds an interviewer-led consulting case: a polished exhibit deck in Gamma, then a scenario that reveals each exhibit on cue, keeps the answer key hidden, and scores the math. | ttai MCP, Gamma MCP, Google Slides |
+| [system-design-interview-builder](skills/system-design-interview-builder) | "New system design interview for Design a Web Crawler", "turn this transcript into a board interview" | Turns transcripts, articles, or chapters into a 20-minute mock interview where the candidate builds on a live architecture board and the interviewer scribes requirements and capacity math on a shared notepad. | ttai MCP |
 | [slides-scenario-builder](skills/slides-scenario-builder) | "Use slides instead of cards", "embed this deck" | Generates a teaching deck in Gamma and wires any scenario to a published Google Slides embed with a slide map the agent navigates. | ttai MCP, Gamma MCP, Google Slides |
 | [system-design-interview-guide](skills/system-design-interview-guide) | "Make a study guide for Design Uber", "turn this Xu chapter into a scenario" | Turns a system design problem into a 20–25 page study guide PDF and an interviewer context pack, optionally published as a scenario. | Your source chapters; optional ttai MCP; pandoc, mermaid-cli, Chrome for the PDF |
 | [case-interview-study-guide](skills/case-interview-study-guide) | "Make notes on Case 4" | Turns one casebook case into a phase-by-phase Word study guide with original notes, reference answers, and recreated exhibit charts. | docx, pdf, and dataviz skills |
@@ -86,6 +87,11 @@ a Tough Tongue AI mock interview.
 ```text
 Make a system design study guide for "Design a Rate Limiter" from the Xu
 chapter I attached, then publish the interviewer pack as a scenario.
+```
+
+```text
+Here's a transcript of a "Design a URL Shortener" walkthrough. Build a board
+interview from it.
 ```
 
 ## Contributing

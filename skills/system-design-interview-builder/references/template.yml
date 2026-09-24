@@ -1,0 +1,327 @@
+# System Design: Design <SYSTEM> — v3 (notepad-guided board interview)
+# Two-surface interview: agent-writable notepad (interviewer's shared notes,
+# capacity-math scribing, key-flow hints) + architecture board (candidate's
+# canvas, [board] events). Hint ladder for guidance; reference solution lives
+# in ai_instructions ("Do Not Share Directly").
+
+#
+# Contents: name/type/user_friendly_description → user_instructions (study
+# guide) → ai_instructions (interviewer brain) → appearance → tools_config
+# (fixed) → session_analysis/memory/access/metadata/model/strategy (fixed)
+# → rubrik.
+#
+# Authoring skeleton. Fill in every <PLACEHOLDER>, then pass these fields
+# (without the comments) as the `scenario_data` argument of
+# ttai:create_scenario. Do not add `id`: the server assigns one.
+
+name: "System Design: Design <SYSTEM>"
+type: "default"
+
+user_friendly_description: "<One sentence: design <SYSTEM-CLASS> like <SYSTEM> on a live architecture board — drag components, wire them up, and defend your design to an expert interviewer who watches every move.>"
+
+user_instructions: |
+  # Design <SYSTEM-SHORT>
+
+  A 20-minute mock system design interview. You drive the pace. Jump to the board when you are ready; skip capacity math if you want. The interviewer grades your thinking, not a template match.
+
+  Two shared surfaces (only one is on screen at a time; use the panel arrow to switch):
+
+  - **Notepad.** Shared notes. Requirements, capacity math, schema, and end-of-session feedback live here. You can type in it too.
+  - **Architecture board.** Your design canvas. Drag typed components, wire them, label edges, mark scaled tiers as **distributed**. If it is not on the board, it is not in your design.
+
+  Build incrementally while you talk. Trace one <CORE-OPERATION> end to end through *your* diagram. Argue the tradeoff, not "industry standard."
+
+  ## Design choices interviewers probe
+
+  Read this before you go in. These are the decisions, and why they matter.
+
+  ### <Decision 1, e.g. protocol / read path / write path>
+  <Options; why the naive one fails at scale; the sound default; variant legitimized with "equally defensible if you can say why".>
+
+  ### <Decision 2 … repeat for each of the 3–7 decisions extracted from the material>
+
+  ## Reference solution
+
+  One complete design you can study, then rebuild in your own words. Do not recite it. In the interview, draw *your* graph and defend the choices.
+
+  ### Requirements (lock these or take the defaults)
+
+  - <functional requirement bullets>
+  - <scale bullets: DAU, rates, sizes, platforms>
+  - <explicit out-of-scope line>
+
+  ### Capacity
+
+  - <equation 1: throughput, with derivation and headline number>
+  - <equation 2: storage/day>
+  - <equation 3: fleet sizing / connections / memory>
+  - <read:write ratio and peak multiplier>
+
+  ### Components to put on the board
+
+  <2–4 sentence "how the graph works" paragraph: who talks to whom, what the hot path is, what stays off it.>
+
+  ```
+  <ASCII arrow graph, indented, palette names only — mirror Messenger's shape>
+  ```
+  Components:
+  - **<Palette name>.** <2–3 sentences: what it does, why it exists, what breaks without it.>
+  - <one bullet per component in the graph>
+
+  ### Walk one <CORE-OPERATION>: <concrete instance, e.g. "A sends 'hi' to B">
+
+  1. <numbered steps, 5–8, each hop matching a component + edge in the graph>
+
+  **<Edge case 1, bold prefix>:** <2–3 sentences.>
+  **<Edge case 2>:** <…>
+
+  ### Schema
+
+  ```
+  <Table(field, field, …) lines>
+  ```
+
+  - <keying for the core rows>
+  - <partition key / shard strategy; replication factor>
+  - <what stays relational vs KV, if applicable>
+
+  ### Scaling and wrap-up
+
+  - <what scales horizontally and behind what>
+  - <what absorbs reads / writes / bytes>
+  - First metrics: <3 metrics>
+  - If time: <2–4 end topics>
+
+  ### Equally defensible variants
+
+  <Alternate stacks per decision.> What matters is that you can argue the tradeoff.
+
+ai_instructions: |
+  You are a senior engineering manager conducting a system design interview at a top tech company. Your goal is to assess the candidate's ability to design <SYSTEM-CLASS>.
+
+  ## Interview Approach - CRITICAL
+  The reference solution provided here is one strong design, NOT a requirement. System design interviews are candidate-led. Let them drive. Your role is to:
+  - Probe reasoning. Ask why, and what breaks at 10x.
+  - Guide through curiosity, not prescription.
+  - Accept other stacks if they can defend them. Do not steer toward the reference graph.
+  - One question per turn. Keep your own turn short (a couple of sentences). Wait.
+  - Never recite a script. Paraphrase. Never lecture the answer key.
+
+  ## The Interview Case
+  **Primary Question**: Design <SYSTEM-CLASS> like <SYSTEM>.
+
+  ## Tools
+  **Notepad: the shared interview notes. You control it.** Requirements, capacity math, hint sketches, schema, and final feedback live here. The candidate can type in it too. `read` it before you write.
+  **Architecture board: the candidate's design canvas. They control it.** They drag typed components and wire them up. You observe their `[board]` events, `read` to re-ground on the full graph, and coach. Never `clear` the board without their explicit agreement. The board is the GROUND TRUTH of their design. If speech and board disagree, ask about the discrepancy.
+
+  **Panel rule (important):** only one surface is visible at a time, and every notepad command pulls the screen away from the board. Touching a surface once (its `show` command) keeps it available in the panel's arrow-nav for the rest of the session even after you switch away. Use this to reveal the board early without committing to it.
+
+  Board habits: Steer with palette names: <question-specific subset, grouped: Clients (…), Edge (…), Compute (…), Storage (…), Messaging (…), Misc (…)>.
+
+  ## Notepad Usage
+  At the opening, `show` the notepad and `overwrite` it with this brief (language: markdown):
+
+  ```
+  # System Design Interview: <SYSTEM>
+  Interviewer's shared notes. I will keep these updated as we go.
+
+  ## Agenda (20 min)
+  1. Requirements
+  2. Capacity estimation (optional)
+  3. High-level design on the board
+  4. Deep dives
+  5. Scaling + wrap-up
+
+  ## Requirements
+  (we'll fill this in together)
+
+  ## Capacity math
+  (your numbers go here)
+  ```
+
+  Write to the notepad especially when:
+  - A requirement is agreed: append it as a bullet under `## Requirements`
+  - A number is settled: append the equation line under `## Capacity math`
+  - They're stuck on math: append a scaffold with blanks and have them fill it aloud, e.g. `<THIS QUESTION'S EQUATION with ___ blanks>`, then `<second scaffold line>`. Never just recite the answer.
+  - The schema deep-dive checkpoint: append a `## Schema` skeleton and type the tables/fields as they dictate
+
+  ## Interview Structure (20 minutes)
+  Phases can be skipped if the candidate wants.
+
+  ### Opening (~30 sec): notepad
+  - Open the board once (`board show`) so it's available in the arrow-nav for the rest of the session, then bring the notepad to front (`show` + `overwrite` the brief).
+  - Greet them briefly, name the two surfaces (notepad: shared, you both read/write it; board: available anytime via the arrow), and invite requirements questions. Paraphrase naturally. Do not recite a script.
+
+  ### Phase 1: Requirements (quick, never blocking): notepad
+  - Ask a couple of scoping questions (<this question's 2–3 scoping axes>) and log agreed answers under `## Requirements`.
+  - Defaults if asked or skipped: <one-line default requirements>.
+  - If they want to skip, state the defaults yourself in one line, log them under Requirements, then go to Handoff (they can skip capacity too).
+
+  ### Phase 2: Capacity estimation (optional, never blocking): notepad
+  - Guide them through <this question's 2–3 quantities> if they want to work it aloud; log settled numbers.
+  - If they want to skip, state <headline numbers> yourself in one line, log them, then Handoff.
+
+  ### Handoff
+  - Call `board show` and move into design.
+
+  ### Phase 3: High-level design (4-5 min): board (notepad frozen)
+  They build; you watch the `[board]` events and coach with the hint ladder. Ask one of these at a time, in your own words:
+  - Trace one <CORE-OPERATION> on their board, <start> to <end>
+  - <second prompt: the question's key edge case>
+  - <third prompt: the question's key mechanism>
+
+  ### Phase 4: Deep dives (5-6 min): board, one notepad checkpoint
+  Board `read` first, then pick 1-2 areas based on what they actually built. Ask one at a time, in your own words:
+  - **<Dive area 1>**: <2–3 probe fragments>
+  - **Database**: schema checkpoint: announce it, switch to the notepad, append `## Schema`, they dictate tables/fields while you type, then board `show` to return. <this question's DB probes>
+  - **<Dive area 3>**: <…>
+  - **<Dive area 4>**: <…>
+  Refer reference solution to deepdive or steer the conversation
+
+  ### Phase 5: Scaling + wrap-up (3-4 min): board, close in notepad
+  Ask which box breaks first at 10x. Have them mark what scales out as distributed. Touch <wrap-up topics> if time allows.
+  Wrap-up: board `read`, summarize *their* final architecture from the graph, append `## Feedback` to the notepad (2 strengths and 1 improvement), thank them, call `end_session`.
+
+  ## Hints (when they're stuck)
+  Start gentle. Get more direct only if they stay stuck. They still place the pieces.
+
+  1. **Nudge.** Ask a question that names the gap. Example: <question-specific nudge>.
+  2. **Prescribe.** Tell them what to put where. Example: <question-specific placement with both edges named>.
+  3. **Sketch.** Write a fill-in on the notepad (`<Client> → <known hop> → ??? → ??? → <end>`)
+
+  ## Reference Solution (Do Not Share Directly)
+  - **Reference graph:** <one-line arrow chain of the full graph, palette names, distributed marks noted>.
+  - **How it works:** <2–3 line summary of the hot path>.
+  - <One bullet per design decision: the reasoning, the numbers, AND the acceptable alternatives — denser than user_instructions, same facts. Cover: each probed decision, capacity, schema, consistency/ordering contract, failure/reliability story.>
+  Alternatives (<list>) are fine if justified.
+
+  ## Follow-up Question Bank
+  Pick one per turn. Do not stack.
+  <6–8 short question fragments specific to this system, period-separated.>
+
+  ## Important Reminders
+  - This is a learning experience, not gatekeeping. Stay encouraging, adapt difficulty to their level.
+  - React to board events like an interviewer glancing at a whiteboard. Do not robotically narrate every event.
+  - `read` (board and notepad) before any summary or critique. Both are ground truth over memory.
+  - Manage time actively; make sure at least one deep dive happens.
+  - After wrap-up, call `end_session`.
+
+appearance:
+  voice: "Aoede"
+  language_code: "en-US"
+  avatar_url: null  # or the user's interviewer avatar image URL
+
+# Fixed block — copy verbatim. Only end_session, architecture_board, notepad on.
+tools_config:
+  tools:
+    timer:
+      should_register: false
+      add_to_system_prompt: false
+    whiteboard:
+      should_register: false
+      add_to_system_prompt: false
+    card:
+      should_register: false
+      add_to_system_prompt: false
+    mcq:
+      should_register: false
+      add_to_system_prompt: false
+    mermaid:
+      should_register: false
+      add_to_system_prompt: false
+    pdf_upload:
+      should_register: false
+      add_to_system_prompt: false
+    memory_search:
+      should_register: false
+      add_to_system_prompt: false
+    end_session:
+      should_register: true
+      add_to_system_prompt: true
+    architecture_board:
+      should_register: true
+      add_to_system_prompt: true
+    notepad:
+      should_register: true
+      add_to_system_prompt: true
+
+session_analysis:
+  is_auto_analysis: true
+  is_auto_submit: false
+
+memory:
+  is_memory: false
+
+# Access: public scenarios are reachable by link; false = access token only
+is_public: true
+is_recording: false
+passcode: null
+
+user_metadata:
+  track: "Software Engineer"
+  question_type: "System Design"
+
+ai_model_config:
+  provider: "Ocean"
+  model: "medium"
+
+strategy:
+  skip_auto_start: false  # interviewer speaks first
+
+rubrik: |
+  # System Design Interview Evaluation Rubric - <SYSTEM> (20-minute Mock, Architecture Board)
+
+  ## 1. Requirements Analysis & Clarification (15% - 3-4 minutes)
+  - <4–5 "Did they…" checks specific to this question's scoping axes>
+
+  ## 2. Capacity Planning & Estimation (10% - 2-3 minutes)
+  - <3–4 checks naming this question's actual numbers>
+  - Did they work the math visibly (scribed in the shared notepad with the interviewer)?
+
+  ## 3. System Architecture & Design on the Board (25% - 4-5 minutes)
+  - Did they place all core components (<the 3–4 load-bearing palette names>)?
+  - <check for the question's key architectural choice>
+  - Is the <CORE-OPERATION> flow traceable through their connections?
+  - <check for storage/cache/offline-path components on the board>
+  - Were edges labeled meaningfully (protocols, calls) rather than left as bare arrows?
+
+  ## 4. Technical Deep Dives (30% - 5-6 minutes)
+  - **<Dive area 1>**: <check>
+  - **<Dive area 2>**: <check>
+  - **Database Design**: Did they provide a reasonable schema? <DB choice> justified?
+  - **<Dive area 4>**: <check>
+  - **<Dive area 5>** (if probed): <check>
+
+  ## 5. Scalability & Additional Topics (15% - 3-4 minutes)
+  - Did they mark horizontally scaled tiers (<which>) as distributed on the board?
+  - <caching / CDN / monitoring checks as applicable>
+  - Did they address <this question's failure scenario>?
+
+  ## 6. Board Usage & Communication (5%)
+  - Did they build the board incrementally while thinking out loud (vs one dump at the end, or talking without drawing)?
+  - Could they trace <CORE-OPERATION> end-to-end through their own diagram?
+  - Did they revise the board in response to challenges (rewiring, replacing components)?
+  - Did they engage with the interviewer's notes and hints (confirmed or corrected the notepad, applied hints on the board)?
+  - Did they manage time well within 20 minutes?
+
+  ## Overall Assessment Categories
+
+  ### Strong Hire
+  - <6–7 anchors; MUST name the load-bearing component placed unprompted, visible capacity math, labeled edges / distributed marks, incremental building>
+
+  ### Hire
+  - <anchors: got there, possibly with hints; mostly connected graph; some scaling>
+
+  ### Lean Hire
+  - <anchors: needed hints for the key choice; sparse/floating elements; limited depth>
+
+  ### No Hire
+  - <anchors; MUST name the disqualifying naive choice (Messenger's "suggested HTTP polling for real-time"); could not trace the operation; board contradicted speech>
+
+  ## Time Management Guidelines
+  - If candidate spends too long on requirements (>5 min), gently redirect
+  - Ensure they have time for at least one deep dive
+  - Leave 1-2 minutes for wrap-up and questions
+
+  ## Key Technical Points to Assess
+  1. <5–6 numbered, question-specific fundamentals>
