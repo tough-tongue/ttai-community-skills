@@ -4,8 +4,7 @@ Load the `ttai:create_scenario` tool schema first — field names below are from
 
 | Pack section | Scenario field | Notes |
 |---|---|---|
-| Header + §1 + §2 (Q&A script, behavior notes) + §4/§5 answer keys | `ai_instructions` | Persona (name, level), the problem statement to read aloud, the canonical answers to give when asked, behaviour notes. Keep under a few thousand words — the full pack goes in `pdf_context`. |
-| Whole pack markdown | `pdf_context` | Supplementary reference; does not bloat the system prompt. |
+| Header + §1 + §2 (Q&A script, behavior notes) + §4/§5/§6 answer keys + §8 probe bank | `ai_instructions` | Persona (name, level), the problem statement to read aloud, the canonical answers to give when asked, behaviour notes, condensed answer keys and the probe bank. The public API has no separate context-document field, so condense rather than paste the whole pack; keep it under a few thousand words. |
 | §10 timeline rows | `strategy.conductor.messages[]` (with `strategy.conductor.enabled: true`) | One entry per phase. Each needs `time_seconds`, `message`, `end_turn`, `trigger`, `content_mode`. The `message` is the conductor cue (e.g. "Move to estimation; play P10"). |
 | §9 rubric | `rubrik` | Field name has no trailing "c". Accepts full markdown. |
 | §9 strong/weak signals | `session_analysis.extraction_vars` (with `enable_extraction: true`) | Types supported: `"text"`, `"number"`, `"boolean"`, `"list"`, `"date"`. Typical vars: `caught_key_estimation_step` (boolean), `deep_dives_covered` (list), `sharding_choice_and_defense` (text). |

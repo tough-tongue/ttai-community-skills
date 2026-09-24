@@ -17,7 +17,9 @@ word ships.
   end in `ttai:create_scenario` / `ttai:update_scenario`, never in "write a
   file into a repo and run an upload command". Use only fields the public
   `create_scenario` schema accepts (no `id` on create, no `created_by`,
-  `metadata`, `is_featured`, `is_paid`; use `user_metadata` for tags).
+  `metadata`, `is_featured`, `is_paid`, `pdf_context`, or
+  `strategy.welcome_instructions`; use `user_metadata` for tags). When in
+  doubt, load the tool schema: it is the source of truth.
 - **Qualified tool names.** Reference MCP tools as `server:tool`
   (`ttai:create_scenario`, `Gamma:generate`). Don't name host-specific agent
   tools (`present_files`, `SendUserFile`, `AskQuestion`, `tool_search`);

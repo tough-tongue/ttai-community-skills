@@ -1,0 +1,66 @@
+# MBA video essay — config skeleton
+# Fill name, copy, rubrik, processed_rubrik. Keep these blocks unless the user overrides.
+
+# Pass these fields as `scenario_data` to ttai:create_scenario.
+
+type: default
+user_metadata:
+  track: "MBA"
+  question_type: "MBA Admission"
+
+# appearance — always set; add avatar_url if the user provides one
+appearance:
+  voice: "Aoede"
+  language_code: "en-US"
+  avatar_url: null
+
+strategy:
+  disable_transcription: false
+  system_instructions_template: "minimal"
+  conductor:
+    enabled: false
+    messages: []
+
+memory:
+  is_memory: false
+
+session_analysis:
+  is_auto_analysis: true
+  is_auto_submit: true
+  multimodal_analysis: true
+  evaluation_target: "the MBA applicant recording the video essays"
+
+ai_model_config:
+  provider: "Ocean"
+  model: "medium-stable"
+
+tools_config:
+  tools:
+    timer:
+      should_register: true
+      add_to_system_prompt: true
+    card:
+      should_register: true
+      add_to_system_prompt: true
+    end_session:
+      should_register: true
+      add_to_system_prompt: true
+    whiteboard:
+      should_register: false
+      add_to_system_prompt: false
+    mcq:
+      should_register: false
+      add_to_system_prompt: false
+    mermaid:
+      should_register: false
+      add_to_system_prompt: false
+    pdf_upload:
+      should_register: false
+      add_to_system_prompt: false
+    memory_search:
+      should_register: false
+      add_to_system_prompt: false
+
+is_public: true
+is_recording: true
+recording_mode: "standard"

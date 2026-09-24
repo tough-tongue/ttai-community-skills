@@ -85,7 +85,7 @@ Build requirements: `pandoc`, `pdfinfo`/`pdftoppm` (poppler), Python Pillow, Goo
 
 ### Publishing a scenario (only if asked)
 
-If the user wants the scenario on Tough Tongue AI, load the `ttai:create_scenario` tool schema and read `references/tough_tongue_mapping.md` for how the pack's sections map to `ai_instructions`, `strategy.conductor.messages`, `rubrik`, `session_analysis.extraction_vars` and `pdf_context`. Confirm the organisational context (personal vs. an organization from `ttai:list_organizations`) before creating.
+If the user wants the scenario on Tough Tongue AI, load the `ttai:create_scenario` tool schema and read `references/tough_tongue_mapping.md` for how the pack's sections map to `ai_instructions`, `strategy.conductor.messages`, `rubrik`, and `session_analysis.extraction_vars`. Confirm the organisational context (personal vs. an organization from `ttai:list_organizations`) before creating.
 
 ## Quality bar
 
