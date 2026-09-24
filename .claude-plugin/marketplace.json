@@ -1,0 +1,20 @@
+{
+  "name": "ttai-community-skills",
+  "description": "Community-supported skills for Tough Tongue AI — the platform for tough conversations. Build mock interviews (PM, consulting case, system design), slide-driven scenarios, and study guides from your coding agent.",
+  "owner": {
+    "name": "tough-tongue",
+    "url": "https://github.com/tough-tongue"
+  },
+  "plugins": [
+    {
+      "name": "ttai-community",
+      "description": "Community-supported Tough Tongue AI skills: pm-scenario-builder, case-interview-builder, slides-scenario-builder, system-design-interview-guide, case-interview-study-guide, and mba-essay-guide.",
+      "source": {
+        "source": "github",
+        "repo": "tough-tongue/ttai-community-skills"
+      },
+      "category": "productivity",
+      "tags": ["ttai", "interview-prep", "mock-interview", "study-guides"]
+    }
+  ]
+}

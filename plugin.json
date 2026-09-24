@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ttai-community",
+  "version": "0.1.0",
+  "description": "Community-supported skills for Tough Tongue AI: build PM, consulting-case, and system design mock interviews, slide-driven scenarios, and the study guides that go with them.",
+  "author": {
+    "name": "Tough Tongue AI",
+    "url": "https://app.toughtongueai.com"
+  },
+  "homepage": "https://github.com/tough-tongue/ttai-community-skills",
+  "repository": "https://github.com/tough-tongue/ttai-community-skills",
+  "license": "MIT",
+  "keywords": ["toughtongue", "ttai", "mock-interview", "case-interview", "product-management", "system-design", "mba"]
+}
