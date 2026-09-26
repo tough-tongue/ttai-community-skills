@@ -10,8 +10,8 @@
       "name": "ttai-community",
       "description": "Community-supported Tough Tongue AI skills: pm-scenario-builder, case-interview-builder, system-design-interview-builder, slides-scenario-builder, system-design-interview-guide, case-interview-study-guide, mba-video-interview, mba-negotiation-case, and mba-essay-guide.",
       "source": {
-        "source": "github",
-        "repo": "tough-tongue/ttai-community-skills"
+        "source": "url",
+        "url": "https://github.com/tough-tongue/ttai-community-skills.git"
       },
       "category": "productivity",
       "tags": ["ttai", "interview-prep", "mock-interview", "study-guides"]

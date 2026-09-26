@@ -45,8 +45,11 @@ word ships.
   and helper scripts the skill points to.
 - `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` — Claude
   Code plugin and marketplace manifests. The marketplace plugin `source` must
-  stay the object form `{ "source": "github", "repo": "..." }`; Claude
-  Desktop/Cowork sync rejects the string shorthand.
+  stay `{ "source": "url", "url": "https://github.com/tough-tongue/ttai-community-skills.git" }`.
+  Don't use `{ "source": "github", ... }`: installs clone it over SSH and fail
+  with "Plugin cannot be installed" for anyone without a GitHub SSH key.
+  Don't use the string shorthand `"."` either: Claude Desktop/Cowork sync
+  rejects it.
 - `plugin.json` (root) — Agent Plugins 1.0.0 manifest
   (<https://agent-plugins.org>).
 - `scripts/link-local.sh` — links every skill into the local agents' skill
