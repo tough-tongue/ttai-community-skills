@@ -1,0 +1,29 @@
+{
+  "name": "ttai-community",
+  "version": "0.3.0",
+  "description": "Community-supported skills for Tough Tongue AI: build PM, consulting-case, system design, and MBA mock interviews, negotiation practice, slide-driven scenarios, and the study guides that go with them.",
+  "author": {
+    "name": "Tough Tongue AI",
+    "url": "https://app.toughtongueai.com"
+  },
+  "homepage": "https://github.com/tough-tongue/ttai-community-skills",
+  "repository": "https://github.com/tough-tongue/ttai-community-skills",
+  "license": "MIT",
+  "keywords": ["toughtongue", "ttai", "mock-interview", "case-interview", "product-management", "system-design", "mba"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Tough Tongue AI Community Skills",
+    "shortDescription": "Build mock interviews and study guides for Tough Tongue AI",
+    "longDescription": "Community-supported skills for Tough Tongue AI, the platform for tough conversations. Turn PM cases, consulting casebook cases, system design material, MBA video essays, and two-party negotiation cases into ready-to-run Tough Tongue AI practice scenarios, build slide-driven scenarios from a Gamma deck, and write the study guides that go with them. Scenario-building skills use the Tough Tongue AI MCP server, which the core toughtongue plugin provides.",
+    "developerName": "Tough Tongue AI",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/tough-tongue/ttai-community-skills",
+    "defaultPrompt": [
+      "Turn this PM case into a Tough Tongue AI mock interview.",
+      "Build a system design board interview for Design a URL Shortener.",
+      "Create a Kellogg video essay practice session.",
+      "Turn this negotiation case into a practice scenario."
+    ]
+  }
+}

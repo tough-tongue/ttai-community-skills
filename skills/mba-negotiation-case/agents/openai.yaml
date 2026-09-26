@@ -1,0 +1,12 @@
+interface:
+  display_name: "MBA Negotiation Case"
+  short_description: "Turn a two-party negotiation case into a practice scenario with a guarded AI counterpart"
+  default_prompt: "Turn this negotiation case into a practice scenario where I play the buyer."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ttai"
+      description: "Tough Tongue AI public API MCP server"
+      transport: "streamable_http"
+      url: "https://api.toughtongueai.com/api/public/mcp"

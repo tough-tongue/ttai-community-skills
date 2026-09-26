@@ -1,0 +1,12 @@
+interface:
+  display_name: "Case Interview Builder"
+  short_description: "Turn a consulting case into an interviewer-led mock case interview with an exhibit deck"
+  default_prompt: "Turn Case 7 from my casebook into a mock case interview with exhibits."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ttai"
+      description: "Tough Tongue AI public API MCP server"
+      transport: "streamable_http"
+      url: "https://api.toughtongueai.com/api/public/mcp"

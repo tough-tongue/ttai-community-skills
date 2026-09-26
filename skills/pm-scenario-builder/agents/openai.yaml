@@ -1,0 +1,12 @@
+interface:
+  display_name: "PM Scenario Builder"
+  short_description: "Turn a PM interview case into a Tough Tongue AI mock interview with a full reference solution"
+  default_prompt: "Turn this PM case into a Tough Tongue AI mock interview: should Netflix launch an ad tier?"
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ttai"
+      description: "Tough Tongue AI public API MCP server"
+      transport: "streamable_http"
+      url: "https://api.toughtongueai.com/api/public/mcp"

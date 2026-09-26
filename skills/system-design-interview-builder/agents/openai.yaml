@@ -1,0 +1,12 @@
+interface:
+  display_name: "System Design Interview Builder"
+  short_description: "Build a notepad + architecture board system design mock interview from prep material"
+  default_prompt: "Build a system design board interview for Design a URL Shortener from this transcript."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ttai"
+      description: "Tough Tongue AI public API MCP server"
+      transport: "streamable_http"
+      url: "https://api.toughtongueai.com/api/public/mcp"

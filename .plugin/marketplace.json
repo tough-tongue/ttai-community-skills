@@ -1,0 +1,15 @@
+{
+  "name": "ttai-community-skills",
+  "owner": {
+    "name": "Tough Tongue AI",
+    "url": "https://github.com/tough-tongue"
+  },
+  "plugins": [
+    {
+      "name": "ttai-community",
+      "source": "./",
+      "description": "Community-supported Tough Tongue AI skills: pm-scenario-builder, case-interview-builder, system-design-interview-builder, slides-scenario-builder, system-design-interview-guide, case-interview-study-guide, mba-video-interview, mba-negotiation-case, and mba-essay-guide.",
+      "category": "productivity"
+    }
+  ]
+}

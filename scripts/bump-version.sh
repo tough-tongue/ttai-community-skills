@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Bump the plugin version in every manifest at once, so Claude Code and Cowork
-# users are offered the update.
+# Bump the plugin version in every manifest at once (Agent Plugins, Claude,
+# Codex, Cursor), so marketplace installs are offered the update.
 #
 # Usage: scripts/bump-version.sh [patch|minor|major|X.Y.Z]   (default: patch)
 set -euo pipefail
@@ -9,7 +9,7 @@ cd "$(dirname "$0")/.."
 python3 - "${1:-patch}" <<'EOF'
 import json, re, sys
 
-files = ["plugin.json", ".claude-plugin/plugin.json"]
+files = ["plugin.json", ".claude-plugin/plugin.json", ".codex-plugin/plugin.json", ".cursor-plugin/plugin.json"]
 current = {f: json.load(open(f))["version"] for f in files}
 if len(set(current.values())) != 1:
     sys.exit(f"Manifest versions disagree, fix by hand first: {current}")

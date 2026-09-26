@@ -51,10 +51,22 @@ word ships.
   Don't use the string shorthand `"."` either: Claude Desktop/Cowork sync
   rejects it.
 - `plugin.json` (root) — Agent Plugins 1.0.0 manifest
-  (<https://agent-plugins.org>).
+  (<https://agent-plugins.org>), read natively by Cursor, Codex, GitHub
+  Copilot, Kiro, and VS Code.
+- `.codex-plugin/plugin.json` + `.agents/plugins/marketplace.json` — Codex
+  plugin and marketplace (`codex plugin add ttai-community@ttai-community-skills`).
+- `.cursor-plugin/plugin.json` — Cursor plugin manifest.
+- `.plugin/marketplace.json` — read by the `npx plugins` CLI before
+  `.claude-plugin/marketplace.json`. Its plugin `source` must stay the string
+  `"./"`: the CLI treats non-string sources as remote and refuses them. Never
+  add a root-level `marketplace.json`; the CLI would prefer it and leak a
+  string source into Claude tooling.
+- `skills/<name>/agents/openai.yaml` — Codex UI metadata, plus the ttai MCP
+  dependency for skills that create scenarios. Keep the MCP URL in sync with
+  the core plugin.
 - `scripts/link-local.sh` — links every skill into the local agents' skill
-  folders for development; `scripts/bump-version.sh` — keeps the manifest
-  versions in sync.
+  folders for development; `scripts/bump-version.sh` — keeps the four
+  manifest versions in sync.
 - This plugin deliberately ships **no MCP config**: the core `toughtongue`
   plugin registers the ttai MCP server, and registering it twice creates
   duplicate servers.
@@ -66,7 +78,9 @@ word ships.
    `grep -rnIiE '/Users/|/mnt/|/home/|jarvis|created_by|cloudfront' skills/<name>`
    must return nothing.
 3. Add a row to the catalog table in `README.md` (what it does, what it needs).
-4. Run `scripts/bump-version.sh` (bumps `version` in `plugin.json` and
-   `.claude-plugin/plugin.json` together). Without a bump, Claude Code and
-   Cowork users on marketplace installs don't update.
-5. `claude plugin validate .` must pass.
+4. Add `skills/<name>/agents/openai.yaml` (copy a sibling's; include the
+   ttai MCP dependency if the skill creates scenarios).
+5. Run `scripts/bump-version.sh`: it bumps `version` in all four plugin
+   manifests (root, Claude, Codex, Cursor) together. Without a bump,
+   marketplace installs don't update.
+6. `claude plugin validate .` must pass.

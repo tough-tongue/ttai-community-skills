@@ -1,0 +1,12 @@
+interface:
+  display_name: "Slides Scenario Builder"
+  short_description: "Wire a Tough Tongue AI scenario to an embedded Google Slides deck the agent navigates"
+  default_prompt: "Convert my coaching scenario to use slides instead of cards."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ttai"
+      description: "Tough Tongue AI public API MCP server"
+      transport: "streamable_http"
+      url: "https://api.toughtongueai.com/api/public/mcp"

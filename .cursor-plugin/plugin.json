@@ -1,6 +1,6 @@
 {
-  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "ttai-community",
+  "displayName": "Tough Tongue AI Community Skills",
   "description": "Community-supported skills for Tough Tongue AI: build PM, consulting-case, system design, and MBA mock interviews, negotiation practice, slide-driven scenarios, and the study guides that go with them.",
   "version": "0.3.0",
   "author": {
@@ -10,13 +10,5 @@
   "homepage": "https://github.com/tough-tongue/ttai-community-skills",
   "repository": "https://github.com/tough-tongue/ttai-community-skills",
   "license": "MIT",
-  "keywords": [
-    "toughtongue",
-    "ttai",
-    "mock-interview",
-    "case-interview",
-    "product-management",
-    "system-design",
-    "mba"
-  ]
+  "keywords": ["toughtongue", "ttai", "mock-interview", "case-interview", "product-management", "system-design", "mba"]
 }

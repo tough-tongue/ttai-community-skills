@@ -1,0 +1,4 @@
+interface:
+  display_name: "System Design Interview Guide"
+  short_description: "Write a system design study guide PDF and interviewer pack from your source chapters"
+  default_prompt: "Make a system design study guide for Design a Rate Limiter from the chapter I attached."

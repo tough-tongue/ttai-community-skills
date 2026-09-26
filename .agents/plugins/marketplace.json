@@ -1,0 +1,20 @@
+{
+  "name": "ttai-community-skills",
+  "interface": {
+    "displayName": "Tough Tongue AI Community Skills"
+  },
+  "plugins": [
+    {
+      "name": "ttai-community",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

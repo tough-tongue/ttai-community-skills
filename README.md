@@ -50,7 +50,26 @@ Other agents: see the
 The case-interview and slides skills also need the
 [Gamma](https://gamma.app) MCP connector.
 
-### Claude Code
+### One command, every agent
+
+The [`plugins` CLI](https://www.npmjs.com/package/plugins) detects the coding
+agents on your machine (Claude Code, Cursor, Codex, GitHub Copilot CLI, VS
+Code, and others) and installs the skills into all of them at once:
+
+```bash
+npx plugins add tough-tongue/ttai-community-skills
+```
+
+This repo is also a standard [Agent Plugin](https://agent-plugins.org) (root
+`plugin.json` + `skills/`), so clients that load Agent Plugins natively can
+point straight at it.
+
+### Claude Code and Cowork
+
+In Cowork: **Customize → Plugins → Add marketplace**, enter
+`tough-tongue/ttai-community-skills`, then install **ttai-community**.
+
+In Claude Code:
 
 ```bash
 claude plugin marketplace add tough-tongue/ttai-community-skills
@@ -63,6 +82,27 @@ claude plugin install ttai-community@ttai-community-skills
 Skills are then available as `/ttai-community:pm-scenario-builder`,
 `/ttai-community:case-interview-builder`, and so on, or just describe the task
 and Claude picks the right one.
+
+### Codex
+
+```bash
+codex plugin marketplace add tough-tongue/ttai-community-skills
+```
+
+```bash
+codex plugin add ttai-community@ttai-community-skills
+```
+
+Restart Codex and start a new thread. To upgrade later, run
+`codex plugin marketplace upgrade ttai-community-skills`, then the `add`
+command again.
+
+### Cursor
+
+In Cursor, go to **Settings > Plugins > Team Marketplaces > Add Marketplace >
+Import from Repo**, point it at
+`https://github.com/tough-tongue/ttai-community-skills`, then install
+**ttai-community**. Or use the Agent Skills CLI below.
 
 ### Any agent (Agent Skills CLI)
 
@@ -126,9 +166,10 @@ scripts/bump-version.sh
 
 Then commit and push. The script raises the version in both plugin manifests
 (`patch` by default; pass `minor`, `major`, or an exact `X.Y.Z`). Without a
-version bump, Claude Code and Cowork don't offer the update. Users then pick
+version bump, Claude Code, Cowork, and Codex don't offer the update. Users then pick
 it up with **Update** on the marketplace in Cowork, `claude plugin update`
-in Claude Code, or `npx skills update` elsewhere.
+in Claude Code, `codex plugin marketplace upgrade` in Codex, or
+`npx skills update` elsewhere.
 
 ## Contributing
 

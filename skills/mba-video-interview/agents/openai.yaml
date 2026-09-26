@@ -1,0 +1,12 @@
+interface:
+  display_name: "MBA Video Interview"
+  short_description: "Build a one-way MBA video essay practice session for a named school"
+  default_prompt: "Create a Kellogg video essay practice session."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "ttai"
+      description: "Tough Tongue AI public API MCP server"
+      transport: "streamable_http"
+      url: "https://api.toughtongueai.com/api/public/mcp"

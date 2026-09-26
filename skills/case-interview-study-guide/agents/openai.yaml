@@ -1,0 +1,4 @@
+interface:
+  display_name: "Case Interview Study Guide"
+  short_description: "Turn a casebook case into a phase-by-phase Word study guide with recreated exhibits"
+  default_prompt: "Make a study guide for Case 4 in my casebook."

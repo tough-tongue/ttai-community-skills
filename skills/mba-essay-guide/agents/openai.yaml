@@ -1,0 +1,4 @@
+interface:
+  display_name: "MBA Essay Guide"
+  short_description: "Research a business school's essays and write a tiered, source-tagged guide"
+  default_prompt: "Write an essay guide for Wharton's MBA application."
