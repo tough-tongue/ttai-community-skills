@@ -49,6 +49,9 @@ word ships.
   Desktop/Cowork sync rejects the string shorthand.
 - `plugin.json` (root) — Agent Plugins 1.0.0 manifest
   (<https://agent-plugins.org>).
+- `scripts/link-local.sh` — links every skill into the local agents' skill
+  folders for development; `scripts/bump-version.sh` — keeps the manifest
+  versions in sync.
 - This plugin deliberately ships **no MCP config**: the core `toughtongue`
   plugin registers the ttai MCP server, and registering it twice creates
   duplicate servers.
@@ -60,6 +63,7 @@ word ships.
    `grep -rnIiE '/Users/|/mnt/|/home/|jarvis|created_by|cloudfront' skills/<name>`
    must return nothing.
 3. Add a row to the catalog table in `README.md` (what it does, what it needs).
-4. Bump `version` in `plugin.json` and `.claude-plugin/plugin.json` together.
-   Without a bump, Claude Code users on marketplace installs don't update.
+4. Run `scripts/bump-version.sh` (bumps `version` in `plugin.json` and
+   `.claude-plugin/plugin.json` together). Without a bump, Claude Code and
+   Cowork users on marketplace installs don't update.
 5. `claude plugin validate .` must pass.

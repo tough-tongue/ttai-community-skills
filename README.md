@@ -96,6 +96,40 @@ Here's a transcript of a "Design a URL Shortener" walkthrough. Build a board
 interview from it.
 ```
 
+## Maintaining these skills
+
+The GitHub repo is the single source of truth. Every app pulls from it.
+
+**On your own machine**, clone the repo once and link its skills into your
+agents' skill folders:
+
+```bash
+git clone https://github.com/tough-tongue/ttai-community-skills.git ~/coding/ttai-community-skills
+```
+
+```bash
+~/coding/ttai-community-skills/scripts/link-local.sh
+```
+
+This links every skill into `~/.agents/skills`, `~/.claude/skills`, and
+`~/.cursor/skills`. Edits in the clone take effect immediately in Claude Code,
+Cursor, and Codex. Anything already at those paths is moved to
+`~/.skills-backup/`, never deleted. Re-run it after adding a skill. On a
+machine set up this way, don't also install the plugin in Claude Code, or
+every skill shows up twice.
+
+**To ship a change** to Cowork, teammates, and everyone else:
+
+```bash
+scripts/bump-version.sh
+```
+
+Then commit and push. The script raises the version in both plugin manifests
+(`patch` by default; pass `minor`, `major`, or an exact `X.Y.Z`). Without a
+version bump, Claude Code and Cowork don't offer the update. Users then pick
+it up with **Update** on the marketplace in Cowork, `claude plugin update`
+in Claude Code, or `npx skills update` elsewhere.
+
 ## Contributing
 
 New skills are welcome. Read [AGENTS.md](AGENTS.md) first: community skills
