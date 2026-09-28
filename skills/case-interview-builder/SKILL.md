@@ -25,7 +25,11 @@ Read the source (PDF page range, project doc, or pasted text) and separate the m
 3. **Parts/phases** — most interviewer-led cases have: structure → 1-2 quantitative parts (each tied to an exhibit) → recommendation. Note which exhibit each part uses and the time budget per part.
 4. **Answer keys and bonus insights** — expected numbers (with acceptable rounding), the intended solution path, extra-credit insights (e.g., inefficiencies in the data, cost-of-capital questions). These go in ai_instructions, the rubric, and the user_instructions study guide — NEVER on the slides.
 
-If an exhibit's underlying values are genuinely unrecoverable from the source (chart series with no printed values, and no answer-key math that pins them down), do NOT invent numbers — generate that slide as a titled placeholder and tell the user to paste a screenshot of the original exhibit during the Google Slides conversion.
+**Recovering chart values.** Text extraction from a casebook PDF drops the numbers printed on chart exhibits. Before giving up on them: (a) check whether the answer key's arithmetic pins the values exactly (it often does — a stated total, ratio, or per-year profit that only reproduces from one set of bar heights); (b) if not, ask the user to attach the raw PDF and read the exhibit page as an image (in Claude, the Read tool's `pages` parameter does this) — bar labels, table cells, line-chart points, and bubble positions are all legible this way, and this has recovered every chart across four casebooks. Only if neither works, do NOT invent numbers: generate that slide as a titled placeholder and tell the user to paste a screenshot of the original exhibit during the Google Slides conversion. Bubble/scatter positions read off an image are approximate (±0.1 on the axis); say so in the project doc and confirm the points the answer key actually depends on.
+
+**Casebook inconsistencies.** Casebooks sometimes contradict their own exhibits (a stated total that doesn't sum, a ratio that doesn't reproduce from the table). Put the exhibit's values on the slides, use the correct arithmetic as the answer key, and tell the interviewer in ai_instructions to accept the candidate's correct figure and never raise the discrepancy. Note the discrepancy in the project doc.
+
+**Source formats vary.** Candidate-led cases (Bain/BCG/LEK style) are converted to interviewer-led: the interviewer still reveals facts only when asked, but drives the part sequence. Cases whose data is given verbally "if asked" (Booth style) get that data turned into exhibit slides revealed at the matching part — verbatim, nothing derived. McKinsey-style casebooks that say "no recommendation in an interviewer-driven case" get a short **Synthesis** part instead of a formal recommendation, and the recommendation divider is titled accordingly. Reveal-on-hypothesis mechanics (a fact disclosed only after the candidate raises the matching hypothesis) are preserved as explicit gates in INTERVIEW FLOW.
 
 ## Step 2 — Generate the exhibit deck with Gamma (the deck IS the experience)
 
@@ -69,7 +73,8 @@ Use the **toughtongue:scenario-creator** skill's field reference for schemas, th
   - `google_slides`: `should_register: true`, `add_to_system_prompt: false`, `tool_settings: {"embedUrl": "<published embed URL>"}` — slide guidance lives in ai_instructions, not the tool prompt. Because of this, the ONLY thing that makes the agent call the tool is the text in ai_instructions — which is why the slide-cue bullets in INTERVIEW FLOW below are mandatory, not stylistic.
   - `end_session`: `should_register: true`, `add_to_system_prompt: true`, `disconnectDelaySeconds: 5`.
   - `browser`: `should_register: false`.
-- `strategy`: `skip_auto_start: false` (interviewer speaks first), `system_instructions_template: "minimal"`, `silence: {"silence_threshold": 30000, "end_session": false, "force_agent_to_speak": true}` (candidates need thinking time — 30s, nudge, never disconnect), `max_duration_seconds` ≈ case length + 25%, conductor messages at T-5min ("show slide #N and ask for the final recommendation now" — name the recommendation slide so the deck moves even when the conductor forces the jump; `end_turn: false`) and at T ("close warmly, use end_session", `end_turn: true`).
+- `strategy`: `skip_auto_start: false` (interviewer speaks first), `system_instructions_template: "minimal"`, `max_duration_seconds` ≈ case length + 25% (typically 1,800–2,700s), conductor messages at T-5min ("show slide #N and ask for the final recommendation now" — name the recommendation slide so the deck moves even when the conductor forces the jump; `end_turn: false`) and at T ("close warmly, use end_session", `end_turn: true`).
+- **Talkative mode stays OFF.** Do NOT set `strategy.silence` to a short threshold with `end_session: false` / `force_agent_to_speak: true`; that auto-nudges the agent into the candidate's thinking time. Leave `silence` at the platform default, `{"silence_threshold": 120000, "end_session": true, "force_agent_to_speak": false}`, either by omitting it or setting it explicitly. Thinking-time patience is handled in ai_instructions ("wait quietly when the candidate asks for a minute"), not by the silence nudge.
 
 ### ai_instructions structure (## sections, in this order)
 1. **ROLE** — top-tier-firm case interviewer; professional, warm but measured; one question per turn then stop; never lectures.
@@ -118,10 +123,15 @@ First line: "Evaluate the CANDIDATE (the human user) — not the AI interviewer.
 
 ## Step 5 — Verify and deliver
 
-1. Re-fetch with `ttai:get_scenario`; confirm embedUrl, `is_recording: false`, conductor times, and that answer-key numbers in ai_instructions, rubric, and user_instructions match the source case exactly.
+1. Re-fetch with `ttai:get_scenario` (the create response may echo the full payload, in which case it serves as the verification); confirm embedUrl, `is_recording: false`, `strategy.silence` null or at the platform default (never talkative mode), conductor times, and that answer-key numbers in ai_instructions, rubric, and user_instructions match the source case exactly.
 2. Slide-cue check: scan ai_instructions and confirm every `### Part` block (and the CASE PROMPT section) has a `- Show slide #` / `- Keep slide #` bullet before its first spoken line, no "or keep" / "Return to Slide" phrasing remains, and every slide number in a bullet appears in SLIDE DECK NAVIGATION. Fix with `ttai:update_scenario` before delivering.
 3. Return the practice link `https://app.toughtongueai.com/run/<id>` and embed link `https://app.toughtongueai.com/embed/<id>`.
 4. Offer a test session and refinement from the transcript via the **toughtongue:scenario-refiner** skill. In the transcript, the `google_slides` call must land BEFORE the interviewer's "you should see it on slide N" line at each part transition — that is the acceptance test for navigation.
+5. **Record the build.** When a project or notes location exists, write one doc per case (links: practice, embed, Gamma, published Slides, scenario id; slide mapping; exhibit recovery notes and any casebook discrepancies; interview design summary; config; extraction vars) and update the master scenario index (row per case with type, difficulty, build date, practice link; a note on which case comes next in each casebook). Future sessions start from these, not from the transcript.
+
+## Batching
+
+When the user asks for several cases at once ("the next 3"), run Steps 1–2 for all of them in one pass (parallel `Gamma:generate` calls), share all deck links together with one review note per deck, and PAUSE once for all the embed links. Then create all scenarios back to back, verify, and document. One pause per batch, not per case.
 
 ## Verification checklist
 - [ ] Every number on the slides and in ai_instructions matches the source case verbatim
@@ -134,5 +144,8 @@ First line: "Evaluate the CANDIDATE (the human user) — not the AI interviewer.
 - [ ] Clarifying info marked reveal-on-request only
 - [ ] user_instructions is a full phase-by-phase study guide: role → case at a glance → per-phase (what happens / how to approach / reference answer / watch out) → general tips with rubric weights — rich markdown, bullets not tables
 - [ ] `is_recording: false`, `is_auto_submit: false`, google_slides `embedUrl` set with `add_to_system_prompt: false`
+- [ ] Talkative mode OFF: `strategy.silence` omitted or at the platform default (120000 ms, `end_session: true`, `force_agent_to_speak: false`)
+- [ ] Chart values recovered from the answer key or the PDF page image before any placeholder; casebook discrepancies resolved in favour of the exhibit and noted
+- [ ] Per-case project doc written and scenario index updated
 - [ ] Rubric evaluates the CANDIDATE, weights sum to 100%, includes answer-key numbers
 - [ ] Extraction vars capture each key number and the final recommendation
