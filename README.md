@@ -139,6 +139,9 @@ interview from it.
 ## Maintaining these skills
 
 The GitHub repo is the single source of truth. Every app pulls from it.
+Step-by-step recipes (ship a change, apply a patch exported from Claude, add
+a skill, update each app, troubleshooting) are in
+[MAINTAINING.md](MAINTAINING.md).
 
 **On your own machine**, clone the repo once and link its skills into your
 agents' skill folders:

@@ -6,6 +6,9 @@ that are not part of the core product plugin
 This repo is public and installs directly into end users' agents, so every
 word ships.
 
+When asked to ship a change, apply a patch, add a skill, or get an update
+into an app, follow [MAINTAINING.md](MAINTAINING.md) step by step.
+
 ## Rules
 
 - **Portable, not personal.** No absolute paths (`/Users/...`, `/mnt/...`,
