@@ -3,8 +3,9 @@ name: case-interview-builder
 description: >
   Turn a consulting case (casebook PDF page range, case doc, or pasted text)
   into an interviewer-led Tough Tongue AI mock case interview with a
-  polished exhibit deck: builds the deck with the Gamma MCP connector, pauses
-  for the user's published Google Slides embed link, then creates the
+  polished exhibit deck: builds the deck with the Gamma MCP connector when
+  connected, otherwise as a .pptx with native charts and tables, pauses for
+  the user's published Google Slides embed link, then creates the
   scenario with slide-cued interview flow, hidden answer keys, a
   phase-by-phase study guide, and a weighted rubric. Use when the user says "turn this
   case into a case interview", "build a consulting case scenario", "mock case
@@ -14,7 +15,7 @@ description: >
 
 # Case Interview Builder
 
-Turn one consulting case into: (1) a Gamma exhibit deck, (2) a Google Slides embed supplied by the user, (3) a Tough Tongue AI interviewer-led scenario wired to those slides. Requires the Gamma and Tough Tongue AI (ttai) MCP servers.
+Turn one consulting case into: (1) an exhibit deck, built in Gamma or as a .pptx, (2) a Google Slides embed supplied by the user, (3) a Tough Tongue AI interviewer-led scenario wired to those slides. Requires the Tough Tongue AI (ttai) MCP server. Gamma MCP is optional: without it, build the deck yourself (Step 2, Path B).
 
 ## Step 1 — Extract the case
 
@@ -31,16 +32,23 @@ Read the source (PDF page range, project doc, or pasted text) and separate the m
 
 **Source formats vary.** Candidate-led cases (Bain/BCG/LEK style) are converted to interviewer-led: the interviewer still reveals facts only when asked, but drives the part sequence. Cases whose data is given verbally "if asked" (Booth style) get that data turned into exhibit slides revealed at the matching part — verbatim, nothing derived. McKinsey-style casebooks that say "no recommendation in an interviewer-driven case" get a short **Synthesis** part instead of a formal recommendation, and the recommendation divider is titled accordingly. Reveal-on-hypothesis mechanics (a fact disclosed only after the candidate raises the matching hypothesis) are preserved as explicit gates in INTERVIEW FLOW.
 
-## Step 2 — Generate the exhibit deck with Gamma (the deck IS the experience)
+## Step 2 — Build the exhibit deck (the deck IS the experience)
 
 The slides are the wow factor of the interview: the candidate watches the interviewer pull up each exhibit at the right dramatic moment, and a polished, visual deck is what makes the session feel like a real interview rather than a phone call. Invest here.
 
-**Deck design principles — apply all of them:**
+**Deck design principles — apply all of them, on either path:**
 - **Generous slide count.** Never ship the bare minimum. A typical case deck is 5–8 slides: a title/welcome slide, the case prompt slide, ONE slide per exhibit (never two exhibits on one slide), and optional neutral transition slides between parts. More distinct slides = more moments where the interviewer visibly advances the deck, which is a core part of the experience.
 - **Transition/divider slides** (optional but encouraged): a near-empty slide with just a part title (e.g., "Part 2 — Your recommendation") gives the interviewer something to flip to during non-exhibit phases. Rule: a divider must be exactly as neutral as the interviewer's own spoken transition — it must never telegraph a structure, insight, or number the candidate is supposed to produce. When in doubt, leave it out.
-- **Charts over tables, wherever the data is a series.** If the source exhibit is a chart, recreate it as a real chart and describe the form explicitly to Gamma (e.g., "two side-by-side vertical bar charts, Year on x-axis, GW on y-axis, scale 0–8"; "pie chart with these four segments and percentage labels"). If the source is a table but one column is a comparable series (market shares by city, profit by segment), STRONGLY prefer rendering it as a labeled bar chart — candidates read patterns off charts the way they would in a real interview, and it looks dramatically better on screen. Keep any footnotes from the original.
+- **Charts over tables, wherever the data is a series.** If the source exhibit is a chart, recreate it as a real chart and specify the form explicitly, in the Gamma prompt or as the .pptx chart type (e.g., "two side-by-side vertical bar charts, Year on x-axis, GW on y-axis, scale 0–8"; "pie chart with these four segments and percentage labels"). If the source is a table but one column is a comparable series (market shares by city, profit by segment), STRONGLY prefer rendering it as a labeled bar chart — candidates read patterns off charts the way they would in a real interview, and it looks dramatically better on screen. Keep any footnotes from the original.
 - **Recreate visual exhibits visually.** Maps, timelines, process diagrams: reproduce the information as a designed visual (chart, annotated list, two-column comparison) rather than collapsing it into plain text — but only encode facts that are verbatim in the source or provably derivable from the answer key (e.g., a with/without-competitor split whose averages reproduce the key's figures exactly). Anything else → titled placeholder + tell the user to paste a screenshot of the original at conversion time.
 - **Tables stay tables** when the source is a financial statement or line-item table — render them clean, aligned, and large, with footnotes intact.
+
+**Pick the deck path now, by the tools you have:**
+- **Path A — Gamma:** the Gamma MCP connector is connected (`Gamma:generate` is available).
+- **Path B — .pptx:** no Gamma. Build the deck yourself as a PowerPoint file.
+- Optional: if a Google Slides or Google Drive connector can create presentations, you may build the deck there directly (or upload the .pptx converted to Google Slides); the user then only checks and publishes it (Step 3, Path B steps 2–4). Never depend on it.
+
+### Path A — Gamma
 
 Call `Gamma:generate` with:
 - `textMode: "preserve"` and `cardSplit: "inputTextBreaks"` with `---` separators — this guarantees one slide per section with numbers untouched.
@@ -51,14 +59,33 @@ Call `Gamma:generate` with:
 
 Poll `Gamma:get_generation_status`, then share the gammaUrl. Ask the user to eyeball every exhibit slide in the Gamma editor before converting — chart rendering is the one thing worth a manual check — and remind them that content tweaks happen in the Gamma editor (the MCP tools cannot edit an existing gamma).
 
+### Path B — build a .pptx
+
+- Use your own pptx or slides skill if you have one; otherwise python-pptx with the tested recipe in [references/pptx-deck.md](references/pptx-deck.md) (title, chart, table, and divider helpers plus a verify script).
+- Same order as Path A: slide 1 is the case intro (title, tags, prompt, key question in a callout), then exhibit and divider slides in interview order. 16:9.
+- Series data → native chart objects (column, bar, line, pie), never pictures of charts: data labels on, axes titled, the source's units and scale.
+- Statements and line-item tables → native tables: large type, numbers right-aligned, every cell exactly as printed, footnotes kept.
+- No answer keys, hints, or solution steps anywhere, speaker notes included. No decorative images, logos, or stock art.
+- Unrecoverable exhibit → titled placeholder slide (Step 1).
+- Re-open the saved file and print every slide's title and chart or table values; check each number against the source and that no slide holds two exhibits.
+- Share the .pptx with the user.
+
 ## Step 3 — Ask the user for the Google Slides embed link
 
-Gamma embeds are not used directly. Ask the user to:
+Neither Gamma embeds nor .pptx files are used directly; the scenario embeds a published Google Slides deck.
+
+**Path A (Gamma).** Ask the user to:
 1. Export/convert the Gamma deck to Google Slides (or recreate it there), pasting screenshots into any placeholder exhibit slides.
 2. Publish it (File → Share → Publish to web).
 3. Send back the published link.
 
-PAUSE the workflow until the link arrives. When it does, use the `/pubembed` (or `/embed`) form of the published URL — not the plain `/pub` page — as the value for `tool_settings.embedUrl`.
+**Path B (.pptx).** Ask the user to:
+1. Upload the .pptx to Google Drive, open it, then **File → Save as Google Slides** (a .pptx opened from Drive stays an Office file and cannot be published). Or, in a new Google Slides deck, **File → Import slides → Upload**, select all slides with "Keep original theme" ticked, and delete the blank first slide.
+2. Click through every exhibit slide against the .pptx: charts and tables can shift or re-render on import. Fix layout only; keep slide order and count (the slide map depends on them). Paste screenshots into any placeholder slides.
+3. **File → Share → Publish to web → Embed** tab → **Publish**, and confirm.
+4. Copy the `https://docs.google.com/presentation/d/e/…` link from the embed code and paste it back.
+
+PAUSE the workflow until the link arrives. When it does, use the published `/d/e/…/pubembed` form as `tool_settings.embedUrl`: if the link ends in `/embed` or `/pub`, change that suffix to `/pubembed`. A `/d/<id>/edit` or `/d/<id>/embed` link is not published and shows viewers an access wall.
 
 ## Step 4 — Create the scenario
 
@@ -127,16 +154,17 @@ First line: "Evaluate the CANDIDATE (the human user) — not the AI interviewer.
 2. Slide-cue check: scan ai_instructions and confirm every `### Part` block (and the CASE PROMPT section) has a `- Show slide #` / `- Keep slide #` bullet before its first spoken line, no "or keep" / "Return to Slide" phrasing remains, and every slide number in a bullet appears in SLIDE DECK NAVIGATION. Fix with `ttai:update_scenario` before delivering.
 3. Return the practice link `https://app.toughtongueai.com/run/<id>` and embed link `https://app.toughtongueai.com/embed/<id>`.
 4. Offer a test session and refinement from the transcript via the **toughtongue:scenario-refiner** skill. In the transcript, the `google_slides` call must land BEFORE the interviewer's "you should see it on slide N" line at each part transition — that is the acceptance test for navigation.
-5. **Record the build.** When a project or notes location exists, write one doc per case (links: practice, embed, Gamma, published Slides, scenario id; slide mapping; exhibit recovery notes and any casebook discrepancies; interview design summary; config; extraction vars) and update the master scenario index (row per case with type, difficulty, build date, practice link; a note on which case comes next in each casebook). Future sessions start from these, not from the transcript.
+5. **Record the build.** When a project or notes location exists, write one doc per case (links: practice, embed, Gamma or .pptx file, published Slides, scenario id; slide mapping; exhibit recovery notes and any casebook discrepancies; interview design summary; config; extraction vars) and update the master scenario index (row per case with type, difficulty, build date, practice link; a note on which case comes next in each casebook). Future sessions start from these, not from the transcript.
 
 ## Batching
 
-When the user asks for several cases at once ("the next 3"), run Steps 1–2 for all of them in one pass (parallel `Gamma:generate` calls), share all deck links together with one review note per deck, and PAUSE once for all the embed links. Then create all scenarios back to back, verify, and document. One pause per batch, not per case.
+When the user asks for several cases at once ("the next 3"), run Steps 1–2 for all of them in one pass (parallel `Gamma:generate` calls, or one .pptx per case), share all decks together with one review note per deck, and PAUSE once for all the embed links. Then create all scenarios back to back, verify, and document. One pause per batch, not per case.
 
 ## Verification checklist
 - [ ] Every number on the slides and in ai_instructions matches the source case verbatim
 - [ ] No answer keys or interviewer guidance on the slides
 - [ ] Deck is generous and visual: 5–8 slides, one exhibit per slide, series data rendered as charts (not tables), visual exhibits recreated visually or placeholdered — never silently flattened to text
+- [ ] Deck path matches the tools: Gamma when connected; otherwise a .pptx with native charts (data labels, titled axes) and native tables, re-opened and checked against the source
 - [ ] Divider slides (if any) are as neutral as a spoken transition — no leaked structure, insights, or numbers
 - [ ] Slide gating: each exhibit slide is shown only when its part begins (and never before a part that estimates its figures); ai_instructions directs ACTIVE navigation, dividers included, so the screen always matches the conversation
 - [ ] Slide cues: every `### Part` block and the CASE PROMPT open with `- Show slide #N` / `- Keep slide #N up` bullets BEFORE the first Say line; one bullet per reveal with its trigger; no-exhibit parts have an explicit Keep bullet; recommendation part names one definite slide (no "or keep"); T-5min conductor message names that slide
